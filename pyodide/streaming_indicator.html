@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en" >
+  <head>
+    <meta charset="utf-8">
+    <title>Streaming Indicator</title>
+<link rel="apple-touch-icon" sizes="180x180" href="https://cdn.holoviz.org/panel/1.8.2/dist/images/apple-touch-icon.png">    <link rel="icon" href="./favicon.ico" type="">
+    <link rel="manifest" href="site.webmanifest">
+    <meta name="name" content="Streaming Indicator">
+    <link rel="manifest" href="">
+    <style>
+      html, body {
+	display: flow-root;
+        box-sizing: border-box;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans" type="text/css" />
+
+<style type="text/css">
+
+:host(.pn-loading):before, .pn-loading:before {
+  background-color: #c3c3c3;
+  mask-size: auto calc(min(50%, 300px));
+  -webkit-mask-size: auto calc(min(50%, 300px));
+}
+</style>
+<script type="text/javascript">
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./serviceWorker.js').then(reg => {
+    reg.onupdatefound = () => {
+      const installingWorker = reg.installing;
+      installingWorker.onstatechange = () => {
+        if (installingWorker.state === 'installed' &&
+            navigator.serviceWorker.controller) {
+          // Reload page if service worker is replaced
+          location.reload();
+        }
+      }
+    }
+  })
+}
+</script>
+
+<script type="esms-options">{"shimMode": true}</script>
+
+<script type="text/javascript" src="https://cdn.holoviz.org/panel/1.8.2/dist/bundled/reactiveesm/es-module-shims@^1.10.0/dist/es-module-shims.min.js"></script>
+<script type="text/javascript" src="https://cdn.bokeh.org/bokeh/release/bokeh-3.8.0.min.js"></script>
+<script type="text/javascript" src="https://cdn.bokeh.org/bokeh/release/bokeh-gl-3.8.0.min.js"></script>
+<script type="text/javascript" src="https://cdn.bokeh.org/bokeh/release/bokeh-widgets-3.8.0.min.js"></script>
+<script type="text/javascript" src="https://cdn.bokeh.org/bokeh/release/bokeh-tables-3.8.0.min.js"></script>
+<script type="text/javascript" src="https://cdn.holoviz.org/panel/1.8.2/dist/panel.min.js"></script>
+
+<script type="module" src="https://cdn.holoviz.org/panel/1.8.2/dist/bundled/@microsoft/fast-components@2.30.6/dist/fast-components.js"></script>
+<script type="module" src="https://cdn.holoviz.org/panel/1.8.2/dist/bundled/fast/js/fast_design.js"></script>
+<script type="text/javascript">
+  Bokeh.set_log_level("info");
+</script>    <!-- Template CSS -->
+    <link rel="stylesheet" href="https://cdn.holoviz.org/panel/1.8.2/dist/css/loadingspinner.css">
+    <link rel="stylesheet" href="https://cdn.holoviz.org/panel/1.8.2/dist/css/markdown.css">
+    <link rel="stylesheet" href="https://cdn.holoviz.org/panel/1.8.2/dist/css/listpanel.css">
+    <link rel="stylesheet" href="https://cdn.holoviz.org/panel/1.8.2/dist/css/button.css">
+    <link rel="stylesheet" href="https://cdn.holoviz.org/panel/1.8.2/dist/css/loading.css?v=1.8.2">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans">
+    <link rel="stylesheet" href="https://cdn.holoviz.org/panel/1.8.2/dist/bundled/theme/default.css?v=1.8.2">
+    <link rel="stylesheet" href="https://cdn.holoviz.org/panel/1.8.2/dist/bundled/fastbasetemplate/fast.css?v=1.8.2">
+    <link rel="stylesheet" href="https://cdn.holoviz.org/panel/1.8.2/dist/bundled/fastlisttemplate/fast_list_template.css?v=1.8.2">
+
+<style>
+  :root {
+    --background-color: #ffffff;
+    --body-font: Open Sans, sans-serif;
+    --corner-radius: 3;
+    --header-background: #0072B5;
+    --header-color: #ffffff;
+    --sidebar-width: 330px;
+    --right-sidebar-width:  330px;
+  }
+  body {
+    color: #2B2B2B;
+    background-color: var(--background-color);
+    font-family: var(--body-font);
+  }
+  #header a {
+    color: currentColor;
+  }
+  #header-design-provider {
+    --neutral-fill-hover: var(--header-background);
+    --neutral-fill-rest: var(--header-background);
+    --neutral-foreground-rest: var(--header-color);
+    --design-background-text-color: var(--header-color);
+    --design-background-color: var(--header-background);
+    background: var(--header-background);
+    color: var(--header-color);
+  }
+  #sidebar {
+    min-width: var(--sidebar-width);
+    max-width: var(--sidebar-width);
+  }
+  #right-sidebar {
+    min-width: var(--right-sidebar-width);
+    max-width: var(--right-sidebar-width);
+  }
+</style>
+
+    <style type="text/css">
+    
+:host(.pn-loading):before, .pn-loading:before {
+  background-color: #c3c3c3;
+  mask-size: auto calc(min(50%, 300px));
+  -webkit-mask-size: auto calc(min(50%, 300px));
+}
+    </style>
+
+    <!-- Template JS -->
+    <script src="https://cdn.holoviz.org/panel/1.8.2/dist/bundled/fastbasetemplate/fast_template.js"></script>
+    <script src="https://cdn.holoviz.org/panel/1.8.2/dist/bundled/@microsoft/fast-components@2.30.6/dist/fast-components.js" type="module"></script>
+    <script src="https://cdn.holoviz.org/panel/1.8.2/dist/bundled/fast/js/fast_design.js" type="module"></script>
+
+<!-- Fast Script -->
+<script type="text/javascript">
+document.addEventListener('DOMContentLoaded', (event) => {
+  const header_design = new window.fastDesignProvider("#header-design-provider");
+  const body_design = window.bodyDesign = new window.fastDesignProvider("#body-design-provider");
+  body_design.setLuminance(1.0);
+  body_design.setAccentColor("#0072B5")
+  body_design.setNeutralColor("#000000");
+  header_design.setLuminance("0.23");
+  header_design.setAccentColor("#ffffff");
+  header_design.setNeutralColor("#0072B5");
+});
+</script>
+  </head>
+  <body class="pn-loading pn-arc">
+<fast-design-system-provider id="body-design-provider" use-defaults>
+  <div id="container">
+    <fast-design-system-provider id="header-design-provider">
+      <nav id="header" class="shadow" >
+	<div class="app-header">
+	  <a class="title" href="" >Streaming Indicator</a>
+	</div>
+	<div id="header-items">
+	</div>
+	<div class="pn-toggle-theme">
+	  <fast-switch id="theme-switch" style="float: right;" onChange="toggleLightDarkTheme('default')" checked>
+	    <span slot="checked-message">
+              <svg class="theme-toggle-icon" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 25"><path d="M0 0h24v24H0z" fill="none"/><path d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"/></svg>
+	    </span>
+	    <span slot="unchecked-message">
+              <svg class="theme-toggle-icon" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 25"><path d="M0 0h24v24H0z" fill="none"/><path d="M10 2c-1.82 0-3.53.5-5 1.35C7.99 5.08 10 8.3 10 12s-2.01 6.92-5 8.65C6.47 21.5 8.18 22 10 22c5.52 0 10-4.48 10-10S15.52 2 10 2z"/></svg>
+	    </span>
+	  </fast-switch>
+	  <fast-tooltip anchor="theme-switch" position="bottom">
+	    Toggle the Theme
+	  </fast-tooltip>
+	</div>
+	<div class="pn-busy-container" id="busy-container">
+	  <div id="e7a1f0ba-c2ca-4df4-8762-c1f6ad8e0653" data-root-id="p1024" style="display: contents;"></div>
+	</div>
+	<fast-tooltip anchor="busy-container" position="left">
+	  Busy Indicator
+	</fast-tooltip>
+      </nav>
+    </fast-design-system-provider>
+
+    <div class="row" id="content">
+
+      <div class="main" id="main">
+        <div class="card-margin None">
+	  <fast-card class="pn-wrapper">
+	    <span class="fullscreen-button" onclick="toggleFullScreen(this)">
+	      <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 18">
+		<path d="M4.5 11H3v4h4v-1.5H4.5V11zM3 7h1.5V4.5H7V3H3v4zm10.5 6.5H11V15h4v-4h-1.5v2.5zM11 3v1.5h2.5V7H15V3h-4z"/>
+	      </svg>
+	    </span>
+	    <div id="f634c154-ccc5-44f7-9fd2-81d1bc7cc60d" data-root-id="p1026" style="display: contents;"></div>
+	  </fast-card>
+	</div>
+        <div class="card-margin stretch_width">
+	  <fast-card class="pn-wrapper">
+	    <span class="fullscreen-button" onclick="toggleFullScreen(this)">
+	      <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 18">
+		<path d="M4.5 11H3v4h4v-1.5H4.5V11zM3 7h1.5V4.5H7V3H3v4zm10.5 6.5H11V15h4v-4h-1.5v2.5zM11 3v1.5h2.5V7H15V3h-4z"/>
+	      </svg>
+	    </span>
+	    <div id="a0f6f18b-be7b-4b18-b0bf-b7fdbbd22099" data-root-id="p1027" style="display: contents;"></div>
+	  </fast-card>
+	</div>
+      </div>
+      <fast-dialog id="pn-Modal" hidden>
+        <fast-button class="pn-modal-close" id="pn-closeModal">&times;</fast-button>
+        <div class="pn-modal-content">
+	</div>
+      </fast-dialog>
+    </div>
+  </div>
+</fast-design-system-provider>
+
+<script type="text/javascript">
+  
+</script>
+
+<script type="text/javascript">
+  function openNav() {
+    document.getElementById("sidebar").classList.remove("hidden");
+    document.getElementById("sidebar-button").onclick = closeNav;
+  }
+
+  function closeNav() {
+    document.getElementById("sidebar").classList.add("hidden");
+    document.getElementById("sidebar-button").onclick = openNav;
+  }
+
+  function openNavRight() {
+    document.getElementById("right-sidebar").classList.remove("hidden");
+    document.getElementById("right-sidebar-button").onclick = closeNavRight;
+  }
+
+  function closeNavRight() {
+    document.getElementById("right-sidebar").classList.add("hidden");
+    document.getElementById("right-sidebar-button").onclick = openNavRight;
+  }
+
+  var modal = document.getElementById("pn-Modal");
+  var span = document.getElementById("pn-closeModal");
+
+  span.onclick = function() {
+    modal.style.display = "none";
+  }
+
+  window.onclick = function(event) {
+    if (event.target == modal) {
+      modal.style.display = "none";
+    }
+  }
+</script>
+
+<div id="ba489552-bfc2-461e-b93e-e90e7e3b605c" data-root-id="p1019" style="display: contents;"></div>
+<div id="eceea5d8-26ef-42c9-aeb6-07d352d75757" data-root-id="p1021" style="display: contents;"></div>
+<div id="d828dd12-9bb8-4b75-96c4-e99b858d1cf3" data-root-id="p1012" style="display: contents;"></div>
+<div id="f4b04f0e-8f86-464d-9d41-620489cfc0ec" data-root-id="p1022" style="display: contents;"></div>
+
+
+  
+    <script type="text/javascript">
+      const pyodideWorker = new Worker("./streaming_indicator.js");
+      pyodideWorker.busy = false
+      pyodideWorker.queue = []
+      
+      let patching = 0
+      
+      function send_change(jsdoc, event) {
+        if ((event.setter_id != null && event.setter_id == 'py') || (patching > 0)) {
+          return
+        } else if (pyodideWorker.busy && event.model && event.attr) {
+          let events = []
+          for (const old_event of pyodideWorker.queue) {
+            if (!(old_event.model === event.model && old_event.attr === event.attr)) {
+              events.push(old_event)
+            }
+          }
+          events.push(event)
+          pyodideWorker.queue = events
+          return
+        }
+        const patch = jsdoc.create_json_patch([event])
+        pyodideWorker.busy = true
+        pyodideWorker.postMessage({type: 'patch', patch: patch})
+      }
+      
+      pyodideWorker.onmessage = async (event) => {
+        const msg = event.data
+      
+        const body = document.getElementsByTagName('body')[0]
+        const loading_msgs = document.getElementsByClassName('pn-loading-msg')
+        if (msg.type === 'idle') {
+          if (pyodideWorker.queue.length) {
+            const patch = pyodideWorker.jsdoc.create_json_patch(pyodideWorker.queue)
+            pyodideWorker.busy = true
+            pyodideWorker.queue = []
+            pyodideWorker.postMessage({type: 'patch', patch: patch})
+          } else {
+            pyodideWorker.busy = false
+          }
+        } else if (msg.type === 'status') {
+          let loading_msg
+          if (loading_msgs.length) {
+            loading_msg = loading_msgs[0]
+          } else if (body.classList.contains('pn-loading')) {
+            loading_msg = document.createElement('div')
+            loading_msg.classList.add('pn-loading-msg')
+            body.appendChild(loading_msg)
+          }
+          if (loading_msg != null) {
+            loading_msg.innerHTML = msg.msg
+          }
+        } else if (msg.type === 'render') {
+          const docs_json = JSON.parse(msg.docs_json)
+          const render_items = JSON.parse(msg.render_items)
+          const root_ids = JSON.parse(msg.root_ids)
+      
+          // Remap roots in message to element IDs
+          const root_els = document.querySelectorAll('[data-root-id]')
+          const data_roots = []
+          for (const el of root_els) {
+             el.innerHTML = ''
+             data_roots.push([el.getAttribute('data-root-id'), el.id])
+          }
+          data_roots.sort((a, b) => a[0]<b[0] ? -1: 1)
+          const roots = {}
+          for (let i=0; i<data_roots.length; i++) {
+            roots[root_ids[i]] = data_roots[i][1]
+          }
+          render_items[0]['roots'] = roots
+          render_items[0]['root_ids'] = root_ids
+      
+          // Clear pre-rendered contents
+          Bokeh.index.roots.map((v) => v.remove())
+      
+          // Embed content
+          const [views] = await Bokeh.embed.embed_items(docs_json, render_items)
+      
+          // Remove loading spinner and message
+          body.classList.remove("pn-loading", "arc")
+          for (const loading_msg of loading_msgs) {
+            loading_msg.remove()
+          }
+      
+          // Setup bi-directional syncing
+          pyodideWorker.jsdoc = jsdoc = [...views.roots.values()][0].model.document
+          jsdoc.on_change(send_change.bind(null, jsdoc), false)
+          pyodideWorker.postMessage({'type': 'rendered'})
+          pyodideWorker.postMessage({'type': 'location', location: JSON.stringify(window.location)})
+        } else if (msg.type === 'patch') {
+          try {
+            patching += 1
+            pyodideWorker.jsdoc.apply_json_patch(msg.patch, msg.buffers)
+          } finally {
+            patching -= 1
+          }
+        }
+      };
+    </script>
+    <script type="application/json" id="p1230">
+      {"54afbead-2634-470b-a2d0-67b1fdd4389e":{"version":"3.8.0","title":"Streaming Indicator","config":{"type":"object","name":"DocumentConfig","id":"p1009","attributes":{"reconnect_session":false,"notify_connection_status":false,"notifications":null}},"roots":[{"type":"object","name":"panel.models.location.Location","id":"p1012","attributes":{"name":"location","reload":false}},{"type":"object","name":"panel.models.markup.HTML","id":"p1019","attributes":{"name":"js_area","stylesheets":["\n:host(.pn-loading):before, .pn-loading:before {\n  background-color: #c3c3c3;\n  mask-size: auto calc(min(50%, 300px));\n  -webkit-mask-size: auto calc(min(50%, 300px));\n}",{"type":"object","name":"ImportedStyleSheet","id":"p1016","attributes":{"url":"https://cdn.holoviz.org/panel/1.8.2/dist/css/loading.css"}},{"type":"object","name":"ImportedStyleSheet","id":"p1015","attributes":{"url":"https://cdn.holoviz.org/panel/1.8.2/dist/bundled/theme/fast.css"}}],"width":0,"height":0,"margin":0,"sizing_mode":"fixed","align":"start","disable_math":true}},{"type":"object","name":"panel.models.reactive_html.ReactiveHTML","id":"p1021","attributes":{"name":"actions","subscribed_events":{"type":"set","entries":["dom_event"]},"stylesheets":["\n:host(.pn-loading):before, .pn-loading:before {\n  background-color: #c3c3c3;\n  mask-size: auto calc(min(50%, 300px));\n  -webkit-mask-size: auto calc(min(50%, 300px));\n}",{"id":"p1016"},{"id":"p1015"}],"margin":0,"align":"start","data":{"type":"object","name":"TemplateActions1","id":"p1020","attributes":{"name":"TemplateActions00126","tags":["__ref:p1021"]}},"scripts":{"type":"map","entries":[["open_modal",["document.getElementById(&amp;#x27;pn-Modal&amp;#x27;).style.display = &amp;#x27;block&amp;#x27;\nwindow.dispatchEvent(new Event(&amp;#x27;resize&amp;#x27;));"]],["close_modal",["document.getElementById(&amp;#x27;pn-Modal&amp;#x27;).style.display = &amp;#x27;none&amp;#x27;"]]]}}},{"type":"object","name":"panel.models.browser.BrowserInfo","id":"p1022","attributes":{"name":"browser_info"}},{"type":"object","name":"panel.models.markup.HTML","id":"p1024","attributes":{"name":"busy_indicator","css_classes":["loader","light"],"stylesheets":[":host { --loading-spinner-size: 20px; }","\n:host(.pn-loading):before, .pn-loading:before {\n  background-color: #c3c3c3;\n  mask-size: auto calc(min(50%, 300px));\n  -webkit-mask-size: auto calc(min(50%, 300px));\n}",{"id":"p1016"},{"type":"object","name":"ImportedStyleSheet","id":"p1023","attributes":{"url":"https://cdn.holoviz.org/panel/1.8.2/dist/css/loadingspinner.css"}},{"id":"p1015"}],"min_width":20,"min_height":20,"margin":[5,10],"align":"start"}},{"type":"object","name":"panel.models.markup.HTML","id":"p1026","attributes":{"name":"main-4517034000","tags":["main"],"css_classes":["markdown"],"stylesheets":["\n:host(.pn-loading):before, .pn-loading:before {\n  background-color: #c3c3c3;\n  mask-size: auto calc(min(50%, 300px));\n  -webkit-mask-size: auto calc(min(50%, 300px));\n}",{"id":"p1016"},{"type":"object","name":"ImportedStyleSheet","id":"p1025","attributes":{"url":"https://cdn.holoviz.org/panel/1.8.2/dist/css/markdown.css"}},{"type":"object","name":"ImportedStyleSheet","id":"p1014","attributes":{"url":"https://cdn.holoviz.org/panel/1.8.2/dist/bundled/theme/default.css"}},{"id":"p1015"}],"margin":[5,10],"align":"start","text":"&amp;lt;p&amp;gt;This example demonstrates how to use &amp;lt;code&amp;gt;add_periodic_callback&amp;lt;/code&amp;gt; to stream data to the &amp;lt;code&amp;gt;Trend&amp;lt;/code&amp;gt; indicator.&amp;lt;/p&amp;gt;\n"}},{"type":"object","name":"panel.models.layout.Column","id":"p1027","attributes":{"name":"main-4527507728","tags":["main"],"stylesheets":["\n:host(.pn-loading):before, .pn-loading:before {\n  background-color: #c3c3c3;\n  mask-size: auto calc(min(50%, 300px));\n  -webkit-mask-size: auto calc(min(50%, 300px));\n}",{"id":"p1016"},{"type":"object","name":"ImportedStyleSheet","id":"p1017","attributes":{"url":"https://cdn.holoviz.org/panel/1.8.2/dist/css/listpanel.css"}},{"id":"p1014"},{"id":"p1015"}],"margin":0,"sizing_mode":"stretch_width","align":"start","children":[{"type":"object","name":"Row","id":"p1028","attributes":{"name":"Row00178","stylesheets":["\n:host(.pn-loading):before, .pn-loading:before {\n  background-color: #c3c3c3;\n  mask-size: auto calc(min(50%, 300px));\n  -webkit-mask-size: auto calc(min(50%, 300px));\n}",{"id":"p1016"},{"id":"p1017"},{"id":"p1014"},{"id":"p1015"}],"margin":0,"align":"start","children":[{"type":"object","name":"Spinner","id":"p1031","attributes":{"stylesheets":["\n:host(.pn-loading):before, .pn-loading:before {\n  background-color: #c3c3c3;\n  mask-size: auto calc(min(50%, 300px));\n  -webkit-mask-size: auto calc(min(50%, 300px));\n}",{"id":"p1016"},{"id":"p1014"},{"id":"p1015"}],"width":300,"min_width":300,"margin":[5,10],"align":"start","title":"Period","description":{"type":"object","name":"Tooltip","id":"p1030","attributes":{"syncable":false,"stylesheets":[":host { white-space: initial; max-width: 300px; }"],"position":"right","content":{"type":"object","name":"bokeh.models.dom.HTML","id":"p1029","attributes":{"html":["&lt;p&gt;Period in milliseconds at which the callback is executed.&lt;/p&gt;\n"]}}}},"value":500,"placeholder":"0","mode":"int"}},{"type":"object","name":"Toggle","id":"p1033","attributes":{"css_classes":["solid"],"stylesheets":["\n:host(.pn-loading):before, .pn-loading:before {\n  background-color: #c3c3c3;\n  mask-size: auto calc(min(50%, 300px));\n  -webkit-mask-size: auto calc(min(50%, 300px));\n}",{"id":"p1016"},{"type":"object","name":"ImportedStyleSheet","id":"p1032","attributes":{"url":"https://cdn.holoviz.org/panel/1.8.2/dist/css/button.css"}},{"id":"p1014"},{"id":"p1015"}],"margin":[5,10],"align":"end","label":"Running","active":true}}]}},{"type":"object","name":"panel.models.reactive_html.ReactiveHTML","id":"p1035","attributes":{"subscribed_events":{"type":"set","entries":["dom_event"]},"stylesheets":["\n:host(.pn-loading):before, .pn-loading:before {\n  background-color: #c3c3c3;\n  mask-size: auto calc(min(50%, 300px));\n  -webkit-mask-size: auto calc(min(50%, 300px));\n}",{"id":"p1016"},{"id":"p1014"},{"id":"p1015"}],"min_width":0,"margin":0,"sizing_mode":"stretch_width","align":"start","attrs":{"type":"map","entries":[["flexbox",[["style",["flex_wrap","justify_content","flex_direction","align_content","align_items","gap"],"display: flex; flex-wrap: {flex_wrap}; justify-content: {justify_content}; flex-direction: {flex_direction}; align-content: {align_content}; align-items: {align_items}; gap: {gap}; height: 100%;"]]]]},"children":{"type":"map","entries":[["flex-item",[{"type":"object","name":"panel.models.trend.TrendIndicator","id":"p1039","attributes":{"stylesheets":["\n:host(.pn-loading):before, .pn-loading:before {\n  background-color: #c3c3c3;\n  mask-size: auto calc(min(50%, 300px));\n  -webkit-mask-size: auto calc(min(50%, 300px));\n}",{"id":"p1016"},{"id":"p1014"},{"id":"p1015"}],"width":150,"height":100,"margin":[5,10],"sizing_mode":"fixed","align":"start","change_formatter":{"type":"object","name":"NumeralTickFormatter","id":"p1040","attributes":{"format":"0.00%"}},"formatter":{"type":"object","name":"BasicTickFormatter","id":"p1041"},"layout":"column","source":{"type":"object","name":"ColumnDataSource","id":"p1036","attributes":{"selected":{"type":"object","name":"Selection","id":"p1037","attributes":{"indices":[],"line_indices":[]}},"selection_policy":{"type":"object","name":"UnionRenderers","id":"p1038"},"data":{"type":"map","entries":[["x",[0,1,2,3,4,5,6,7,8,9]],["y",{"type":"ndarray","array":{"type":"bytes","data":"H4sIAAEAAAAC/wFQAK//tnySqlVv97+zdsCgAGwDwOx/4TPXOuO/FMKQ7NdGzD/tQILqO23Qvx629alKvuA/aCjlVTF/yr/fVOhJHs3iv5VsGf/2u9O/6kpjP4cD5T/EexNoUAAAAA=="},"shape":[10],"dtype":"float64","order":"little"}]]}}},"plot_x":"x","plot_y":"y","plot_color":"#428bca","plot_type":"line","pos_color":"#5cb85c","neg_color":"#d9534f","value":0.6566807020229508,"value_change":-3.1296776569067983}},{"type":"object","name":"panel.models.trend.TrendIndicator","id":"p1045","attributes":{"stylesheets":["\n:host(.pn-loading):before, .pn-loading:before {\n  background-color: #c3c3c3;\n  mask-size: auto calc(min(50%, 300px));\n  -webkit-mask-size: auto calc(min(50%, 300px));\n}",{"id":"p1016"},{"id":"p1014"},{"id":"p1015"}],"width":150,"height":100,"margin":[5,10],"sizing_mode":"fixed","align":"start","change_formatter":{"type":"object","name":"NumeralTickFormatter","id":"p1046","attributes":{"format":"0.00%"}},"formatter":{"type":"object","name":"BasicTickFormatter","id":"p1047"},"layout":"column","source":{"type":"object","name":"ColumnDataSource","id":"p1042","attributes":{"selected":{"type":"object","name":"Selection","id":"p1043","attributes":{"indices":[],"line_indices":[]}},"selection_policy":{"type":"object","name":"UnionRenderers","id":"p1044"},"data":{"type":"map","entries":[["x",[0,1,2,3,4,5,6,7,8,9]],["y",{"type":"ndarray","array":{"type":"bytes","data":"H4sIAAEAAAAC/wFQAK//MJN/1dpR3D9DRRUIJ4/9P9q3xUnfvwZA9L7N6rV1FUAOvxAmaeYUQHMUiYtauhVAXlYSMSNqE0DnE0rMuPoTQPwJl8qS/xpAkZW83uUoH0BZuHq+UAAAAA=="},"shape":[10],"dtype":"float64","order":"little"}]]}}},"plot_x":"x","plot_y":"y","plot_color":"#428bca","plot_type":"step","pos_color":"#5cb85c","neg_color":"#d9534f","value":7.789939384708661,"value_change":0.15413632525139964}},{"type":"object","name":"panel.models.trend.TrendIndicator","id":"p1051","attributes":{"stylesheets":["\n:host(.pn-loading):before, .pn-loading:before {\n  background-color: #c3c3c3;\n  mask-size: auto calc(min(50%, 300px));\n  -webkit-mask-size: auto calc(min(50%, 300px));\n}",{"id":"p1016"},{"id":"p1014"},{"id":"p1015"}],"width":150,"height":100,"margin":[5,10],"sizing_mode":"fixed","align":"start","change_formatter":{"type":"object","name":"NumeralTickFormatter","id":"p1052","attributes":{"format":"0.00%"}},"formatter":{"type":"object","name":"BasicTickFormatter","id":"p1053"},"layout":"column","source":{"type":"object","name":"ColumnDataSource","id":"p1048","attributes":{"selected":{"type":"object","name":"Selection","id":"p1049","attributes":{"indices":[],"line_indices":[]}},"selection_policy":{"type":"object","name":"UnionRenderers","id":"p1050"},"data":{"type":"map","entries":[["x",[0,1,2,3,4,5,6,7,8,9]],["y",{"type":"ndarray","array":{"type":"bytes","data":"H4sIAAEAAAAC/wFQAK//OQUIAAKD6z8wMNJIsT3jP8Q2LYBbssO/PgdQ4MQI9L/CMHNZJSUKwCFFLASIeAnAaQ1g3fSl87/8i1VOiRLgP43ZQraOcPE/KQuWzBs+AEArE3smUAAAAA=="},"shape":[10],"dtype":"float64","order":"little"}]]}}},"plot_x":"x","plot_y":"y","plot_color":"#428bca","plot_type":"area","pos_color":"#5cb85c","neg_color":"#d9534f","value":2.030326460198371,"value_change":0.8627192592975681}},{"type":"object","name":"panel.models.trend.TrendIndicator","id":"p1057","attributes":{"stylesheets":["\n:host(.pn-loading):before, .pn-loading:before {\n  background-color: #c3c3c3;\n  mask-size: auto calc(min(50%, 300px));\n  -webkit-mask-size: auto calc(min(50%, 300px));\n}",{"id":"p1016"},{"id":"p1014"},{"id":"p1015"}],"width":150,"height":100,"margin":[5,10],"sizing_mode":"fixed","align":"start","change_formatter":{"type":"object","name":"NumeralTickFormatter","id":"p1058","attributes":{"format":"0.00%"}},"formatter":{"type":"object","name":"BasicTickFormatter","id":"p1059"},"layout":"column","source":{"type":"object","name":"ColumnDataSource","id":"p1054","attributes":{"selected":{"type":"object","name":"Selection","id":"p1055","attributes":{"indices":[],"line_indices":[]}},"selection_policy":{"type":"object","name":"UnionRenderers","id":"p1056"},"data":{"type":"map","entries":[["x",[0,1,2,3,4,5,6,7,8,9]],["y",{"type":"ndarray","array":{"type":"bytes","data":"H4sIAAEAAAAC/wFQAK//8fr5p5Dz8T9qp5PLx8P+Py55we8xLARAvAwMh1erA0CiV7Jmd5kMQMzCBsjjqhBA8cO3ojX9F0DG8NBzausRQDx47He5kw9A4LiUDkAiDkA/La2VUAAAAA=="},"shape":[10],"dtype":"float64","order":"little"}]]}}},"plot_x":"x","plot_y":"y","plot_color":"#428bca","plot_type":"bar","pos_color":"#5cb85c","neg_color":"#d9534f","value":3.766723741449013,"value_change":-0.04570594461581012}},{"type":"object","name":"panel.models.trend.TrendIndicator","id":"p1063","attributes":{"stylesheets":["\n:host(.pn-loading):before, .pn-loading:before {\n  background-color: #c3c3c3;\n  mask-size: auto calc(min(50%, 300px));\n  -webkit-mask-size: auto calc(min(50%, 300px));\n}",{"id":"p1016"},{"id":"p1014"},{"id":"p1015"}],"width":150,"height":100,"margin":[5,10],"sizing_mode":"fixed","align":"start","change_formatter":{"type":"object","name":"NumeralTickFormatter","id":"p1064","attributes":{"format":"0.00%"}},"formatter":{"type":"object","name":"BasicTickFormatter","id":"p1065"},"layout":"column","source":{"type":"object","name":"ColumnDataSource","id":"p1060","attributes":{"selected":{"type":"object","name":"Selection","id":"p1061","attributes":{"indices":[],"line_indices":[]}},"selection_policy":{"type":"object","name":"UnionRenderers","id":"p1062"},"data":{"type":"map","entries":[["x",[0,1,2,3,4,5,6,7,8,9]],["y",{"type":"ndarray","array":{"type":"bytes","data":"H4sIAAEAAAAC/wFQAK//GjunYi4p6j/GfSm8hfkGQKGnBzh5HgVAZCNbwbtZAkCHsvL0EJDxPzrAN1Hb/fc/2EnCHNVk/j+tq3eQww/0P/C1fm3DFO4/ejB7uDR+8T8lMWw9UAAAAA=="},"shape":[10],"dtype":"float64","order":"little"}]]}}},"plot_x":"x","plot_y":"y","plot_color":"#428bca","plot_type":"line","pos_color":"#5cb85c","neg_color":"#d9534f","value":1.0933119970605092,"value_change":0.16305506699757788}},{"type":"object","name":"panel.models.trend.TrendIndicator","id":"p1069","attributes":{"stylesheets":["\n:host(.pn-loading):before, .pn-loading:before {\n  background-color: #c3c3c3;\n  mask-size: auto calc(min(50%, 300px));\n  -webkit-mask-size: auto calc(min(50%, 300px));\n}",{"id":"p1016"},{"id":"p1014"},{"id":"p1015"}],"width":150,"height":100,"margin":[5,10],"sizing_mode":"fixed","align":"start","change_formatter":{"type":"object","name":"NumeralTickFormatter","id":"p1070","attributes":{"format":"0.00%"}},"formatter":{"type":"object","name":"BasicTickFormatter","id":"p1071"},"layout":"column","source":{"type":"object","name":"ColumnDataSource","id":"p1066","attributes":{"selected":{"type":"object","name":"Selection","id":"p1067","attributes":{"indices":[],"line_indices":[]}},"selection_policy":{"type":"object","name":"UnionRenderers","id":"p1068"},"data":{"type":"map","entries":[["x",[0,1,2,3,4,5,6,7,8,9]],["y",{"type":"ndarray","array":{"type":"bytes","data":"H4sIAAEAAAAC/wFQAK//uQSroY4Ozj+CDvWSwXTov/1BqJEFIPY/5ncWFvxm9z++pcgMlm/8PwfXlokFFPw/jWYhZBAvAUApC1GaZgsCQFp6D8G5XBJAjwNJAY9QEUAkDOF3UAAAAA=="},"shape":[10],"dtype":"float64","order":"little"}]]}}},"plot_x":"x","plot_y":"y","plot_color":"#428bca","plot_type":"step","pos_color":"#5cb85c","neg_color":"#d9534f","value":4.328670520860114,"value_change":-0.05704799885303102}},{"type":"object","name":"panel.models.trend.TrendIndicator","id":"p1075","attributes":{"stylesheets":["\n:host(.pn-loading):before, .pn-loading:before {\n  background-color: #c3c3c3;\n  mask-size: auto calc(min(50%, 300px));\n  -webkit-mask-size: auto calc(min(50%, 300px));\n}",{"id":"p1016"},{"id":"p1014"},{"id":"p1015"}],"width":150,"height":100,"margin":[5,10],"sizing_mode":"fixed","align":"start","change_formatter":{"type":"object","name":"NumeralTickFormatter","id":"p1076","attributes":{"format":"0.00%"}},"formatter":{"type":"object","name":"BasicTickFormatter","id":"p1077"},"layout":"column","source":{"type":"object","name":"ColumnDataSource","id":"p1072","attributes":{"selected":{"type":"object","name":"Selection","id":"p1073","attributes":{"indices":[],"line_indices":[]}},"selection_policy":{"type":"object","name":"UnionRenderers","id":"p1074"},"data":{"type":"map","entries":[["x",[0,1,2,3,4,5,6,7,8,9]],["y",{"type":"ndarray","array":{"type":"bytes","data":"H4sIAAEAAAAC/wFQAK//gygeRAF7+b/qBOGdtT/7vwBaDkWrFwvAVt3zsBXoFsAYk7edO4YWwKu7HKneEhnA3DeAoqA5GMAgh4vomngXwH5bBNZYWxPAwnPOhsN6DcAY4RWuUAAAAA=="},"shape":[10],"dtype":"float64","order":"little"}]]}}},"plot_x":"x","plot_y":"y","plot_color":"#428bca","plot_type":"area","pos_color":"#5cb85c","neg_color":"#d9534f","value":-3.6849432498697476,"value_change":-0.23852317991925043}},{"type":"object","name":"panel.models.trend.TrendIndicator","id":"p1081","attributes":{"stylesheets":["\n:host(.pn-loading):before, .pn-loading:before {\n  background-color: #c3c3c3;\n  mask-size: auto calc(min(50%, 300px));\n  -webkit-mask-size: auto calc(min(50%, 300px));\n}",{"id":"p1016"},{"id":"p1014"},{"id":"p1015"}],"width":150,"height":100,"margin":[5,10],"sizing_mode":"fixed","align":"start","change_formatter":{"type":"object","name":"NumeralTickFormatter","id":"p1082","attributes":{"format":"0.00%"}},"formatter":{"type":"object","name":"BasicTickFormatter","id":"p1083"},"layout":"column","source":{"type":"object","name":"ColumnDataSource","id":"p1078","attributes":{"selected":{"type":"object","name":"Selection","id":"p1079","attributes":{"indices":[],"line_indices":[]}},"selection_policy":{"type":"object","name":"UnionRenderers","id":"p1080"},"data":{"type":"map","entries":[["x",[0,1,2,3,4,5,6,7,8,9]],["y",{"type":"ndarray","array":{"type":"bytes","data":"H4sIAAEAAAAC/wFQAK//B1snTIjd6r9GPL6Tq/EAwD7U5qS6KgzAwSxg3S6tCsBMpU/JybIMwCMDWK8b6gjAlInKFsAtCMDJwFF71JcHwEyUZeGnig7Au4wfkNZ8E8CzvnqWUAAAAA=="},"shape":[10],"dtype":"float64","order":"little"}]]}}},"plot_x":"x","plot_y":"y","plot_color":"#428bca","plot_type":"bar","pos_color":"#5cb85c","neg_color":"#d9534f","value":-4.871912242818492,"value_change":0.2761370432684338}},{"type":"object","name":"panel.models.trend.TrendIndicator","id":"p1087","attributes":{"stylesheets":["\n:host(.pn-loading):before, .pn-loading:before {\n  background-color: #c3c3c3;\n  mask-size: auto calc(min(50%, 300px));\n  -webkit-mask-size: auto calc(min(50%, 300px));\n}",{"id":"p1016"},{"id":"p1014"},{"id":"p1015"}],"width":150,"height":100,"margin":[5,10],"sizing_mode":"fixed","align":"start","change_formatter":{"type":"object","name":"NumeralTickFormatter","id":"p1088","attributes":{"format":"0.00%"}},"formatter":{"type":"object","name":"BasicTickFormatter","id":"p1089"},"layout":"column","source":{"type":"object","name":"ColumnDataSource","id":"p1084","attributes":{"selected":{"type":"object","name":"Selection","id":"p1085","attributes":{"indices":[],"line_indices":[]}},"selection_policy":{"type":"object","name":"UnionRenderers","id":"p1086"},"data":{"type":"map","entries":[["x",[0,1,2,3,4,5,6,7,8,9]],["y",{"type":"ndarray","array":{"type":"bytes","data":"H4sIAAEAAAAC/wFQAK//y3w7xGDKtb8rV1i7a7vgv1e31+QXYeW/IuopBHEVAMDSG/s1I+ryv1b8YyLDMf+/qL2YmZtjCsBHy+G5TgcPwGMBjZORXQ/APhlfsqKpCsCaAahTUAAAAA=="},"shape":[10],"dtype":"float64","order":"little"}]]}}},"plot_x":"x","plot_y":"y","plot_color":"#428bca","plot_type":"line","pos_color":"#5cb85c","neg_color":"#d9534f","value":-3.3328298506995955,"value_change":-0.14993745925689228}},{"type":"object","name":"panel.models.trend.TrendIndicator","id":"p1093","attributes":{"stylesheets":["\n:host(.pn-loading):before, .pn-loading:before {\n  background-color: #c3c3c3;\n  mask-size: auto calc(min(50%, 300px));\n  -webkit-mask-size: auto calc(min(50%, 300px));\n}",{"id":"p1016"},{"id":"p1014"},{"id":"p1015"}],"width":150,"height":100,"margin":[5,10],"sizing_mode":"fixed","align":"start","change_formatter":{"type":"object","name":"NumeralTickFormatter","id":"p1094","attributes":{"format":"0.00%"}},"formatter":{"type":"object","name":"BasicTickFormatter","id":"p1095"},"layout":"column","source":{"type":"object","name":"ColumnDataSource","id":"p1090","attributes":{"selected":{"type":"object","name":"Selection","id":"p1091","attributes":{"indices":[],"line_indices":[]}},"selection_policy":{"type":"object","name":"UnionRenderers","id":"p1092"},"data":{"type":"map","entries":[["x",[0,1,2,3,4,5,6,7,8,9]],["y",{"type":"ndarray","array":{"type":"bytes","data":"H4sIAAEAAAAC/wFQAK//JVlRtszC1r/QMVkhNTLsv3bOskjts+g//Fl29juLyj8kCRf4vur1P065MAan4f8/iGhNelrg6z+3VPb+3xrvPwJf1rkFK98/1SitQ5U74z8aBzQGUAAAAA=="},"shape":[10],"dtype":"float64","order":"little"}]]}}},"plot_x":"x","plot_y":"y","plot_color":"#428bca","plot_type":"step","pos_color":"#5cb85c","neg_color":"#d9534f","value":0.6010233232311984,"value_change":0.234131911782252}},{"type":"object","name":"panel.models.trend.TrendIndicator","id":"p1099","attributes":{"stylesheets":["\n:host(.pn-loading):before, .pn-loading:before {\n  background-color: #c3c3c3;\n  mask-size: auto calc(min(50%, 300px));\n  -webkit-mask-size: auto calc(min(50%, 300px));\n}",{"id":"p1016"},{"id":"p1014"},{"id":"p1015"}],"width":150,"height":100,"margin":[5,10],"sizing_mode":"fixed","align":"start","change_formatter":{"type":"object","name":"NumeralTickFormatter","id":"p1100","attributes":{"format":"0.00%"}},"formatter":{"type":"object","name":"BasicTickFormatter","id":"p1101"},"layout":"column","source":{"type":"object","name":"ColumnDataSource","id":"p1096","attributes":{"selected":{"type":"object","name":"Selection","id":"p1097","attributes":{"indices":[],"line_indices":[]}},"selection_policy":{"type":"object","name":"UnionRenderers","id":"p1098"},"data":{"type":"map","entries":[["x",[0,1,2,3,4,5,6,7,8,9]],["y",{"type":"ndarray","array":{"type":"bytes","data":"H4sIAAEAAAAC/wFQAK//L5vXAuQB9r+VO7VZugLtv/c0TU+aQuK/FiOj9YC2AsAsQjdto9n4vwnBNIeLDvm/6Nev5bR5AsCwmERg5+ANwPuSs8BDwBDAreOAuJM8EMCda+PfUAAAAA=="},"shape":[10],"dtype":"float64","order":"little"}]]}}},"plot_x":"x","plot_y":"y","plot_color":"#428bca","plot_type":"area","pos_color":"#5cb85c","neg_color":"#d9534f","value":-4.059157259814055,"value_change":-0.030708838086906054}},{"type":"object","name":"panel.models.trend.TrendIndicator","id":"p1105","attributes":{"stylesheets":["\n:host(.pn-loading):before, .pn-loading:before {\n  background-color: #c3c3c3;\n  mask-size: auto calc(min(50%, 300px));\n  -webkit-mask-size: auto calc(min(50%, 300px));\n}",{"id":"p1016"},{"id":"p1014"},{"id":"p1015"}],"width":150,"height":100,"margin":[5,10],"sizing_mode":"fixed","align":"start","change_formatter":{"type":"object","name":"NumeralTickFormatter","id":"p1106","attributes":{"format":"0.00%"}},"formatter":{"type":"object","name":"BasicTickFormatter","id":"p1107"},"layout":"column","source":{"type":"object","name":"ColumnDataSource","id":"p1102","attributes":{"selected":{"type":"object","name":"Selection","id":"p1103","attributes":{"indices":[],"line_indices":[]}},"selection_policy":{"type":"object","name":"UnionRenderers","id":"p1104"},"data":{"type":"map","entries":[["x",[0,1,2,3,4,5,6,7,8,9]],["y",{"type":"ndarray","array":{"type":"bytes","data":"H4sIAAEAAAAC/wFQAK//yN7OIjon4L94JnS3Fqjcv2iVsajdPNG/IM4qlPr93j9oiuotjoDCv/sIGp5mofa/PDNT9Jeh4j98SnkjEMf8P0Vtz27Jc/U/UUwdNCrK8D9dvas7UAAAAA=="},"shape":[10],"dtype":"float64","order":"little"}]]}}},"plot_x":"x","plot_y":"y","plot_color":"#428bca","plot_type":"bar","pos_color":"#5cb85c","neg_color":"#d9534f","value":1.0493566547127282,"value_change":-0.2173467438947727}},{"type":"object","name":"panel.models.trend.TrendIndicator","id":"p1111","attributes":{"stylesheets":["\n:host(.pn-loading):before, .pn-loading:before {\n  background-color: #c3c3c3;\n  mask-size: auto calc(min(50%, 300px));\n  -webkit-mask-size: auto calc(min(50%, 300px));\n}",{"id":"p1016"},{"id":"p1014"},{"id":"p1015"}],"width":150,"height":100,"margin":[5,10],"sizing_mode":"fixed","align":"start","change_formatter":{"type":"object","name":"NumeralTickFormatter","id":"p1112","attributes":{"format":"0.00%"}},"formatter":{"type":"object","name":"BasicTickFormatter","id":"p1113"},"layout":"column","source":{"type":"object","name":"ColumnDataSource","id":"p1108","attributes":{"selected":{"type":"object","name":"Selection","id":"p1109","attributes":{"indices":[],"line_indices":[]}},"selection_policy":{"type":"object","name":"UnionRenderers","id":"p1110"},"data":{"type":"map","entries":[["x",[0,1,2,3,4,5,6,7,8,9]],["y",{"type":"ndarray","array":{"type":"bytes","data":"H4sIAAEAAAAC/wFQAK//tfg0aQ6csT/UGwEAJ3zyP/SWmlkqsfO/zSKfL41M8L+IaiF57In9vzJm7WUg2AHAYU6SgbS4BsC2F061Ul4OwL7D6nt5WwHA7GBvmSdoEMCVVd8hUAAAAA=="},"shape":[10],"dtype":"float64","order":"little"}]]}}},"plot_x":"x","plot_y":"y","plot_color":"#428bca","plot_type":"line","pos_color":"#5cb85c","neg_color":"#d9534f","value":-4.10171355955411,"value_change":0.8904821623200583}},{"type":"object","name":"panel.models.trend.TrendIndicator","id":"p1117","attributes":{"stylesheets":["\n:host(.pn-loading):before, .pn-loading:before {\n  background-color: #c3c3c3;\n  mask-size: auto calc(min(50%, 300px));\n  -webkit-mask-size: auto calc(min(50%, 300px));\n}",{"id":"p1016"},{"id":"p1014"},{"id":"p1015"}],"width":150,"height":100,"margin":[5,10],"sizing_mode":"fixed","align":"start","change_formatter":{"type":"object","name":"NumeralTickFormatter","id":"p1118","attributes":{"format":"0.00%"}},"formatter":{"type":"object","name":"BasicTickFormatter","id":"p1119"},"layout":"column","source":{"type":"object","name":"ColumnDataSource","id":"p1114","attributes":{"selected":{"type":"object","name":"Selection","id":"p1115","attributes":{"indices":[],"line_indices":[]}},"selection_policy":{"type":"object","name":"UnionRenderers","id":"p1116"},"data":{"type":"map","entries":[["x",[0,1,2,3,4,5,6,7,8,9]],["y",{"type":"ndarray","array":{"type":"bytes","data":"H4sIAAEAAAAC/wFQAK//UdHdjcA+8r8Ozx0fDOXgv8gVACEG5M0/mNhSImH1v79Az5GkDkfwP4DNCRFLk7S/FAmUVqB4AUDB6xbg/5sEQAYSgPV0Nvo/CJOlMx5cBkBruELJUAAAAA=="},"shape":[10],"dtype":"float64","order":"little"}]]}}},"plot_x":"x","plot_y":"y","plot_color":"#428bca","plot_type":"step","pos_color":"#5cb85c","neg_color":"#d9534f","value":2.7949794802574424,"value_change":0.7060292869992744}},{"type":"object","name":"panel.models.trend.TrendIndicator","id":"p1123","attributes":{"stylesheets":["\n:host(.pn-loading):before, .pn-loading:before {\n  background-color: #c3c3c3;\n  mask-size: auto calc(min(50%, 300px));\n  -webkit-mask-size: auto calc(min(50%, 300px));\n}",{"id":"p1016"},{"id":"p1014"},{"id":"p1015"}],"width":150,"height":100,"margin":[5,10],"sizing_mode":"fixed","align":"start","change_formatter":{"type":"object","name":"NumeralTickFormatter","id":"p1124","attributes":{"format":"0.00%"}},"formatter":{"type":"object","name":"BasicTickFormatter","id":"p1125"},"layout":"column","source":{"type":"object","name":"ColumnDataSource","id":"p1120","attributes":{"selected":{"type":"object","name":"Selection","id":"p1121","attributes":{"indices":[],"line_indices":[]}},"selection_policy":{"type":"object","name":"UnionRenderers","id":"p1122"},"data":{"type":"map","entries":[["x",[0,1,2,3,4,5,6,7,8,9]],["y",{"type":"ndarray","array":{"type":"bytes","data":"H4sIAAEAAAAC/wFQAK//Kk/o2Vqk6r/6rZjSXwb+v6HE6uxXogDAmB2ZJWDp+7+s0I+J+TzivwAIM3Zyu2m/1gcB7zzT6T+sqSXwOCzwPzLoGT6rdQNA6MhJ8teA4D96WwLPUAAAAA=="},"shape":[10],"dtype":"float64","order":"little"}]]}}},"plot_x":"x","plot_y":"y","plot_color":"#428bca","plot_type":"area","pos_color":"#5cb85c","neg_color":"#d9534f","value":0.5157279712859948,"value_change":-0.787980513572568}},{"type":"object","name":"panel.models.trend.TrendIndicator","id":"p1129","attributes":{"stylesheets":["\n:host(.pn-loading):before, .pn-loading:before {\n  background-color: #c3c3c3;\n  mask-size: auto calc(min(50%, 300px));\n  -webkit-mask-size: auto calc(min(50%, 300px));\n}",{"id":"p1016"},{"id":"p1014"},{"id":"p1015"}],"width":150,"height":100,"margin":[5,10],"sizing_mode":"fixed","align":"start","change_formatter":{"type":"object","name":"NumeralTickFormatter","id":"p1130","attributes":{"format":"0.00%"}},"formatter":{"type":"object","name":"BasicTickFormatter","id":"p1131"},"layout":"column","source":{"type":"object","name":"ColumnDataSource","id":"p1126","attributes":{"selected":{"type":"object","name":"Selection","id":"p1127","attributes":{"indices":[],"line_indices":[]}},"selection_policy":{"type":"object","name":"UnionRenderers","id":"p1128"},"data":{"type":"map","entries":[["x",[0,1,2,3,4,5,6,7,8,9]],["y",{"type":"ndarray","array":{"type":"bytes","data":"H4sIAAEAAAAC/wFQAK//HQmN+YQV9j9n1sU1UBUDQGZIw8IOGgNAvYfZtb/jAUC9BWjEVgACQMKmx/0wqgVA7uSXvZeNDEDqiCGbBvQGQNLfmNOZMQxAizT+uGGiCEBmRBw2UAAAAA=="},"shape":[10],"dtype":"float64","order":"little"}]]}}},"plot_x":"x","plot_y":"y","plot_color":"#428bca","plot_type":"bar","pos_color":"#5cb85c","neg_color":"#d9534f","value":3.079287953622559,"value_change":-0.12624959047617634}},{"type":"object","name":"panel.models.trend.TrendIndicator","id":"p1135","attributes":{"stylesheets":["\n:host(.pn-loading):before, .pn-loading:before {\n  background-color: #c3c3c3;\n  mask-size: auto calc(min(50%, 300px));\n  -webkit-mask-size: auto calc(min(50%, 300px));\n}",{"id":"p1016"},{"id":"p1014"},{"id":"p1015"}],"width":150,"height":100,"margin":[5,10],"sizing_mode":"fixed","align":"start","change_formatter":{"type":"object","name":"NumeralTickFormatter","id":"p1136","attributes":{"format":"0.00%"}},"formatter":{"type":"object","name":"BasicTickFormatter","id":"p1137"},"layout":"column","source":{"type":"object","name":"ColumnDataSource","id":"p1132","attributes":{"selected":{"type":"object","name":"Selection","id":"p1133","attributes":{"indices":[],"line_indices":[]}},"selection_policy":{"type":"object","name":"UnionRenderers","id":"p1134"},"data":{"type":"map","entries":[["x",[0,1,2,3,4,5,6,7,8,9]],["y",{"type":"ndarray","array":{"type":"bytes","data":"H4sIAAEAAAAC/wFQAK//Lq2W2v/B/D+VAHkfXGoCQLgm27Sx8ARArDbdY5YG8T8dxn1Kd+YIQBpI4yn8rg1A2vXO6g4cEkBII99H+Y4QQKriuTQP0RRA3bVtt6H3F0B8QIzaUAAAAA=="},"shape":[10],"dtype":"float64","order":"little"}]]}}},"plot_x":"x","plot_y":"y","plot_color":"#428bca","plot_type":"line","pos_color":"#5cb85c","neg_color":"#d9534f","value":5.99182783705825,"value_change":0.15135359668167747}},{"type":"object","name":"panel.models.trend.TrendIndicator","id":"p1141","attributes":{"stylesheets":["\n:host(.pn-loading):before, .pn-loading:before {\n  background-color: #c3c3c3;\n  mask-size: auto calc(min(50%, 300px));\n  -webkit-mask-size: auto calc(min(50%, 300px));\n}",{"id":"p1016"},{"id":"p1014"},{"id":"p1015"}],"width":150,"height":100,"margin":[5,10],"sizing_mode":"fixed","align":"start","change_formatter":{"type":"object","name":"NumeralTickFormatter","id":"p1142","attributes":{"format":"0.00%"}},"formatter":{"type":"object","name":"BasicTickFormatter","id":"p1143"},"layout":"column","source":{"type":"object","name":"ColumnDataSource","id":"p1138","attributes":{"selected":{"type":"object","name":"Selection","id":"p1139","attributes":{"indices":[],"line_indices":[]}},"selection_policy":{"type":"object","name":"UnionRenderers","id":"p1140"},"data":{"type":"map","entries":[["x",[0,1,2,3,4,5,6,7,8,9]],["y",{"type":"ndarray","array":{"type":"bytes","data":"H4sIAAEAAAAC/wFQAK//Ibj8mggLpb9dS05qKg/AP0DRXSwnIN+/ETgDJDIg5b955IhDIlTxv6Vi/vFpVPy/zLvLIRdOBMC2KnsR1177v34Amm7WIwbAV4rGFQm3+b9QujMpUAAAAA=="},"shape":[10],"dtype":"float64","order":"little"}]]}}},"plot_x":"x","plot_y":"y","plot_color":"#428bca","plot_type":"step","pos_color":"#5cb85c","neg_color":"#d9534f","value":-1.6071863985640868,"value_change":-0.4192639306291971}},{"type":"object","name":"panel.models.trend.TrendIndicator","id":"p1147","attributes":{"stylesheets":["\n:host(.pn-loading):before, .pn-loading:before {\n  background-color: #c3c3c3;\n  mask-size: auto calc(min(50%, 300px));\n  -webkit-mask-size: auto calc(min(50%, 300px));\n}",{"id":"p1016"},{"id":"p1014"},{"id":"p1015"}],"width":150,"height":100,"margin":[5,10],"sizing_mode":"fixed","align":"start","change_formatter":{"type":"object","name":"NumeralTickFormatter","id":"p1148","attributes":{"format":"0.00%"}},"formatter":{"type":"object","name":"BasicTickFormatter","id":"p1149"},"layout":"column","source":{"type":"object","name":"ColumnDataSource","id":"p1144","attributes":{"selected":{"type":"object","name":"Selection","id":"p1145","attributes":{"indices":[],"line_indices":[]}},"selection_policy":{"type":"object","name":"UnionRenderers","id":"p1146"},"data":{"type":"map","entries":[["x",[0,1,2,3,4,5,6,7,8,9]],["y",{"type":"ndarray","array":{"type":"bytes","data":"H4sIAAEAAAAC/wFQAK//excT0iyC+b9M+6pWN9oGwHaVD67LeQnA9S+z7rgdFcBkk0sEck8TwCZINteabxPAfMzNL1oqFcCSbsR4Q9cawOjUC+lS0RvA5xp4gOVKHMBmGpBVUAAAAA=="},"shape":[10],"dtype":"float64","order":"little"}]]}}},"plot_x":"x","plot_y":"y","plot_color":"#428bca","plot_type":"area","pos_color":"#5cb85c","neg_color":"#d9534f","value":-7.073141105013497,"value_change":0.01707163236437692}},{"type":"object","name":"panel.models.trend.TrendIndicator","id":"p1153","attributes":{"stylesheets":["\n:host(.pn-loading):before, .pn-loading:before {\n  background-color: #c3c3c3;\n  mask-size: auto calc(min(50%, 300px));\n  -webkit-mask-size: auto calc(min(50%, 300px));\n}",{"id":"p1016"},{"id":"p1014"},{"id":"p1015"}],"width":150,"height":100,"margin":[5,10],"sizing_mode":"fixed","align":"start","change_formatter":{"type":"object","name":"NumeralTickFormatter","id":"p1154","attributes":{"format":"0.00%"}},"formatter":{"type":"object","name":"BasicTickFormatter","id":"p1155"},"layout":"column","source":{"type":"object","name":"ColumnDataSource","id":"p1150","attributes":{"selected":{"type":"object","name":"Selection","id":"p1151","attributes":{"indices":[],"line_indices":[]}},"selection_policy":{"type":"object","name":"UnionRenderers","id":"p1152"},"data":{"type":"map","entries":[["x",[0,1,2,3,4,5,6,7,8,9]],["y",{"type":"ndarray","array":{"type":"bytes","data":"H4sIAAEAAAAC/wFQAK//BrWTbFn9oD9SVdMlQBHYP6zdt0/MOsO/7PzC/4W2+z8xjWTZcSH6P+uerHAxLwRAI2oZHWz4BEAueodZiB8LQJos6IxO0BJA2M3oEAjTD0BTOwF3UAAAAA=="},"shape":[10],"dtype":"float64","order":"little"}]]}}},"plot_x":"x","plot_y":"y","plot_color":"#428bca","plot_type":"bar","pos_color":"#5cb85c","neg_color":"#d9534f","value":3.9780427285238424,"value_change":-0.15422420302764916}},{"type":"object","name":"panel.models.trend.TrendIndicator","id":"p1159","attributes":{"stylesheets":["\n:host(.pn-loading):before, .pn-loading:before {\n  background-color: #c3c3c3;\n  mask-size: auto calc(min(50%, 300px));\n  -webkit-mask-size: auto calc(min(50%, 300px));\n}",{"id":"p1016"},{"id":"p1014"},{"id":"p1015"}],"width":150,"height":100,"margin":[5,10],"sizing_mode":"fixed","align":"start","change_formatter":{"type":"object","name":"NumeralTickFormatter","id":"p1160","attributes":{"format":"0.00%"}},"formatter":{"type":"object","name":"BasicTickFormatter","id":"p1161"},"layout":"column","source":{"type":"object","name":"ColumnDataSource","id":"p1156","attributes":{"selected":{"type":"object","name":"Selection","id":"p1157","attributes":{"indices":[],"line_indices":[]}},"selection_policy":{"type":"object","name":"UnionRenderers","id":"p1158"},"data":{"type":"map","entries":[["x",[0,1,2,3,4,5,6,7,8,9]],["y",{"type":"ndarray","array":{"type":"bytes","data":"H4sIAAEAAAAC/wFQAK//wzJGrVvU4b+YvlbdpvfmvxpRPIAuYuS/iIixKJXi+r8nufsynAkQwAOuBFPCYw7AIuN3PS/zDcBT/TOEK0cMwLo9VIY2XBDADtLTQOqKFMCf7Z3gUAAAAA=="},"shape":[10],"dtype":"float64","order":"little"}]]}}},"plot_x":"x","plot_y":"y","plot_color":"#428bca","plot_type":"line","pos_color":"#5cb85c","neg_color":"#d9534f","value":-5.13565923016405,"value_change":0.2556465174435132}},{"type":"object","name":"panel.models.trend.TrendIndicator","id":"p1165","attributes":{"stylesheets":["\n:host(.pn-loading):before, .pn-loading:before {\n  background-color: #c3c3c3;\n  mask-size: auto calc(min(50%, 300px));\n  -webkit-mask-size: auto calc(min(50%, 300px));\n}",{"id":"p1016"},{"id":"p1014"},{"id":"p1015"}],"width":150,"height":100,"margin":[5,10],"sizing_mode":"fixed","align":"start","change_formatter":{"type":"object","name":"NumeralTickFormatter","id":"p1166","attributes":{"format":"0.00%"}},"formatter":{"type":"object","name":"BasicTickFormatter","id":"p1167"},"layout":"column","source":{"type":"object","name":"ColumnDataSource","id":"p1162","attributes":{"selected":{"type":"object","name":"Selection","id":"p1163","attributes":{"indices":[],"line_indices":[]}},"selection_policy":{"type":"object","name":"UnionRenderers","id":"p1164"},"data":{"type":"map","entries":[["x",[0,1,2,3,4,5,6,7,8,9]],["y",{"type":"ndarray","array":{"type":"bytes","data":"H4sIAAEAAAAC/wFQAK//sR2RA6ez6j9aS1uCeffXvwD79uCJ9e2/A2IGnbAZ9L+Lxpa1H7fzv8CrH1SUce2/cDm6wNo/xT8SK87GS3P9v2noXupe4gHASM8R543SBsBNOxKkUAAAAA=="},"shape":[10],"dtype":"float64","order":"little"}]]}}},"plot_x":"x","plot_y":"y","plot_color":"#428bca","plot_type":"step","pos_color":"#5cb85c","neg_color":"#d9534f","value":-2.8528097202596747,"value_change":0.27612083175911795}},{"type":"object","name":"panel.models.trend.TrendIndicator","id":"p1171","attributes":{"stylesheets":["\n:host(.pn-loading):before, .pn-loading:before {\n  background-color: #c3c3c3;\n  mask-size: auto calc(min(50%, 300px));\n  -webkit-mask-size: auto calc(min(50%, 300px));\n}",{"id":"p1016"},{"id":"p1014"},{"id":"p1015"}],"width":150,"height":100,"margin":[5,10],"sizing_mode":"fixed","align":"start","change_formatter":{"type":"object","name":"NumeralTickFormatter","id":"p1172","attributes":{"format":"0.00%"}},"formatter":{"type":"object","name":"BasicTickFormatter","id":"p1173"},"layout":"column","source":{"type":"object","name":"ColumnDataSource","id":"p1168","attributes":{"selected":{"type":"object","name":"Selection","id":"p1169","attributes":{"indices":[],"line_indices":[]}},"selection_policy":{"type":"object","name":"UnionRenderers","id":"p1170"},"data":{"type":"map","entries":[["x",[0,1,2,3,4,5,6,7,8,9]],["y",{"type":"ndarray","array":{"type":"bytes","data":"H4sIAAEAAAAC/wFQAK//HTZKIepN7z+AyVF3ByXPP48q6xMsFgdATh/tH6yNCkAQFY2+FSEOQBYjWOH78wZA0KqzUZEQBUBiBZERH9fwP/JLuoGJpQFAS5RVsVnt/j+TclrCUAAAAA=="},"shape":[10],"dtype":"float64","order":"little"}]]}}},"plot_x":"x","plot_y":"y","plot_color":"#428bca","plot_type":"area","pos_color":"#5cb85c","neg_color":"#d9534f","value":1.9329468657608853,"value_change":-0.12370943234500997}},{"type":"object","name":"panel.models.trend.TrendIndicator","id":"p1177","attributes":{"stylesheets":["\n:host(.pn-loading):before, .pn-loading:before {\n  background-color: #c3c3c3;\n  mask-size: auto calc(min(50%, 300px));\n  -webkit-mask-size: auto calc(min(50%, 300px));\n}",{"id":"p1016"},{"id":"p1014"},{"id":"p1015"}],"width":150,"height":100,"margin":[5,10],"sizing_mode":"fixed","align":"start","change_formatter":{"type":"object","name":"NumeralTickFormatter","id":"p1178","attributes":{"format":"0.00%"}},"formatter":{"type":"object","name":"BasicTickFormatter","id":"p1179"},"layout":"column","source":{"type":"object","name":"ColumnDataSource","id":"p1174","attributes":{"selected":{"type":"object","name":"Selection","id":"p1175","attributes":{"indices":[],"line_indices":[]}},"selection_policy":{"type":"object","name":"UnionRenderers","id":"p1176"},"data":{"type":"map","entries":[["x",[0,1,2,3,4,5,6,7,8,9]],["y",{"type":"ndarray","array":{"type":"bytes","data":"H4sIAAEAAAAC/wFQAK//p6OUOEMm3L99BYTHYUTKv/wn5+PnCgDA7jJxZTSCA8D7CR+GF8Xxv82pOPwJKgTAgMzb5ysP1j9ScBzMmlP5P6iD34/cWvA/Ot2xbZbx+j/6Y6qyUAAAAA=="},"shape":[10],"dtype":"float64","order":"little"}]]}}},"plot_x":"x","plot_y":"y","plot_color":"#428bca","plot_type":"bar","pos_color":"#5cb85c","neg_color":"#d9534f","value":1.6839813504173677,"value_change":0.6474362706878307}},{"type":"object","name":"panel.models.trend.TrendIndicator","id":"p1183","attributes":{"stylesheets":["\n:host(.pn-loading):before, .pn-loading:before {\n  background-color: #c3c3c3;\n  mask-size: auto calc(min(50%, 300px));\n  -webkit-mask-size: auto calc(min(50%, 300px));\n}",{"id":"p1016"},{"id":"p1014"},{"id":"p1015"}],"width":150,"height":100,"margin":[5,10],"sizing_mode":"fixed","align":"start","change_formatter":{"type":"object","name":"NumeralTickFormatter","id":"p1184","attributes":{"format":"0.00%"}},"formatter":{"type":"object","name":"BasicTickFormatter","id":"p1185"},"layout":"column","source":{"type":"object","name":"ColumnDataSource","id":"p1180","attributes":{"selected":{"type":"object","name":"Selection","id":"p1181","attributes":{"indices":[],"line_indices":[]}},"selection_policy":{"type":"object","name":"UnionRenderers","id":"p1182"},"data":{"type":"map","entries":[["x",[0,1,2,3,4,5,6,7,8,9]],["y",{"type":"ndarray","array":{"type":"bytes","data":"H4sIAAEAAAAC/wFQAK//VkqRCqur8T/vdRNI4N/rPxrLx9QeF9m/rL7o1RJuyr/Yt34+BMXoP7vI3LaSK+k/3EKbFI4P4T9tipyVIt3oP9vWx3lcudg/J4TBVIN4/z+gLVt2UAAAAA=="},"shape":[10],"dtype":"float64","order":"little"}]]}}},"plot_x":"x","plot_y":"y","plot_color":"#428bca","plot_type":"line","pos_color":"#5cb85c","neg_color":"#d9534f","value":1.966922122075866,"value_change":4.09151727332708}},{"type":"object","name":"panel.models.trend.TrendIndicator","id":"p1189","attributes":{"stylesheets":["\n:host(.pn-loading):before, .pn-loading:before {\n  background-color: #c3c3c3;\n  mask-size: auto calc(min(50%, 300px));\n  -webkit-mask-size: auto calc(min(50%, 300px));\n}",{"id":"p1016"},{"id":"p1014"},{"id":"p1015"}],"width":150,"height":100,"margin":[5,10],"sizing_mode":"fixed","align":"start","change_formatter":{"type":"object","name":"NumeralTickFormatter","id":"p1190","attributes":{"format":"0.00%"}},"formatter":{"type":"object","name":"BasicTickFormatter","id":"p1191"},"layout":"column","source":{"type":"object","name":"ColumnDataSource","id":"p1186","attributes":{"selected":{"type":"object","name":"Selection","id":"p1187","attributes":{"indices":[],"line_indices":[]}},"selection_policy":{"type":"object","name":"UnionRenderers","id":"p1188"},"data":{"type":"map","entries":[["x",[0,1,2,3,4,5,6,7,8,9]],["y",{"type":"ndarray","array":{"type":"bytes","data":"H4sIAAEAAAAC/wFQAK//7XLs3QJggT81X9OFjlvUPyRXGSPWyMo/Gm8EQTE/wz9ARfBgru3oP2K8rzEMp/o/tiMWEh0k9T+IAlg+XLriv5DEYTB3zdI/Ezht9qI46T9do0PaUAAAAA=="},"shape":[10],"dtype":"float64","order":"little"}]]}}},"plot_x":"x","plot_y":"y","plot_color":"#428bca","plot_type":"step","pos_color":"#5cb85c","neg_color":"#d9534f","value":0.7881636441250087,"value_change":1.6827392707730895}},{"type":"object","name":"panel.models.trend.TrendIndicator","id":"p1195","attributes":{"stylesheets":["\n:host(.pn-loading):before, .pn-loading:before {\n  background-color: #c3c3c3;\n  mask-size: auto calc(min(50%, 300px));\n  -webkit-mask-size: auto calc(min(50%, 300px));\n}",{"id":"p1016"},{"id":"p1014"},{"id":"p1015"}],"width":150,"height":100,"margin":[5,10],"sizing_mode":"fixed","align":"start","change_formatter":{"type":"object","name":"NumeralTickFormatter","id":"p1196","attributes":{"format":"0.00%"}},"formatter":{"type":"object","name":"BasicTickFormatter","id":"p1197"},"layout":"column","source":{"type":"object","name":"ColumnDataSource","id":"p1192","attributes":{"selected":{"type":"object","name":"Selection","id":"p1193","attributes":{"indices":[],"line_indices":[]}},"selection_policy":{"type":"object","name":"UnionRenderers","id":"p1194"},"data":{"type":"map","entries":[["x",[0,1,2,3,4,5,6,7,8,9]],["y",{"type":"ndarray","array":{"type":"bytes","data":"H4sIAAEAAAAC/wFQAK//QqIF75Lt8L9A5rCyVcjdP0NIz2QIv+Q/LiYxNb4S1j+KOe8xTFP9P9QfNXzNWvk/SODiEk3p8D+sqkxKFgDIP1iAGHyDIpW/xqjgaOv/0j/MrMUFUAAAAA=="},"shape":[10],"dtype":"float64","order":"little"}]]}}},"plot_x":"x","plot_y":"y","plot_color":"#428bca","plot_type":"area","pos_color":"#5cb85c","neg_color":"#d9534f","value":0.2968700908846923,"value_change":-15.383609150886334}},{"type":"object","name":"panel.models.trend.TrendIndicator","id":"p1201","attributes":{"stylesheets":["\n:host(.pn-loading):before, .pn-loading:before {\n  background-color: #c3c3c3;\n  mask-size: auto calc(min(50%, 300px));\n  -webkit-mask-size: auto calc(min(50%, 300px));\n}",{"id":"p1016"},{"id":"p1014"},{"id":"p1015"}],"width":150,"height":100,"margin":[5,10],"sizing_mode":"fixed","align":"start","change_formatter":{"type":"object","name":"NumeralTickFormatter","id":"p1202","attributes":{"format":"0.00%"}},"formatter":{"type":"object","name":"BasicTickFormatter","id":"p1203"},"layout":"column","source":{"type":"object","name":"ColumnDataSource","id":"p1198","attributes":{"selected":{"type":"object","name":"Selection","id":"p1199","attributes":{"indices":[],"line_indices":[]}},"selection_policy":{"type":"object","name":"UnionRenderers","id":"p1200"},"data":{"type":"map","entries":[["x",[0,1,2,3,4,5,6,7,8,9]],["y",{"type":"ndarray","array":{"type":"bytes","data":"H4sIAAEAAAAC/wFQAK//BzWepSIn3r9jTMMKGFYBQNB7sCEQq+4/TZZfjtx/9D9uevq+bEEFQD+V7OswxQFAunn+q81j9T+K7YzJ97YEQJR3I6mWJ/w/+NZ3SO2NAUCecrS0UAAAAA=="},"shape":[10],"dtype":"float64","order":"little"}]]}}},"plot_x":"x","plot_y":"y","plot_color":"#428bca","plot_type":"bar","pos_color":"#5cb85c","neg_color":"#d9534f","value":2.1943002378055745,"value_change":0.24699873628606994}},{"type":"object","name":"panel.models.trend.TrendIndicator","id":"p1207","attributes":{"stylesheets":["\n:host(.pn-loading):before, .pn-loading:before {\n  background-color: #c3c3c3;\n  mask-size: auto calc(min(50%, 300px));\n  -webkit-mask-size: auto calc(min(50%, 300px));\n}",{"id":"p1016"},{"id":"p1014"},{"id":"p1015"}],"width":150,"height":100,"margin":[5,10],"sizing_mode":"fixed","align":"start","change_formatter":{"type":"object","name":"NumeralTickFormatter","id":"p1208","attributes":{"format":"0.00%"}},"formatter":{"type":"object","name":"BasicTickFormatter","id":"p1209"},"layout":"column","source":{"type":"object","name":"ColumnDataSource","id":"p1204","attributes":{"selected":{"type":"object","name":"Selection","id":"p1205","attributes":{"indices":[],"line_indices":[]}},"selection_policy":{"type":"object","name":"UnionRenderers","id":"p1206"},"data":{"type":"map","entries":[["x",[0,1,2,3,4,5,6,7,8,9]],["y",{"type":"ndarray","array":{"type":"bytes","data":"H4sIAAEAAAAC/wFQAK//B3Q28vLT3z/+awE1SqHXPzg13ogNxOU/0noPZWAn9j92o8TXnCwGQKAVX6mRfQdA6k4kr7rWE0DFSclO/+oVQBxTU0mg8BJAUS5d0PfuEEDRSEcPUAAAAA=="},"shape":[10],"dtype":"float64","order":"little"}]]}}},"plot_x":"x","plot_y":"y","plot_color":"#428bca","plot_type":"line","pos_color":"#5cb85c","neg_color":"#d9534f","value":4.233367210089981,"value_change":-0.10593889550035351}},{"type":"object","name":"panel.models.trend.TrendIndicator","id":"p1213","attributes":{"stylesheets":["\n:host(.pn-loading):before, .pn-loading:before {\n  background-color: #c3c3c3;\n  mask-size: auto calc(min(50%, 300px));\n  -webkit-mask-size: auto calc(min(50%, 300px));\n}",{"id":"p1016"},{"id":"p1014"},{"id":"p1015"}],"width":150,"height":100,"margin":[5,10],"sizing_mode":"fixed","align":"start","change_formatter":{"type":"object","name":"NumeralTickFormatter","id":"p1214","attributes":{"format":"0.00%"}},"formatter":{"type":"object","name":"BasicTickFormatter","id":"p1215"},"layout":"column","source":{"type":"object","name":"ColumnDataSource","id":"p1210","attributes":{"selected":{"type":"object","name":"Selection","id":"p1211","attributes":{"indices":[],"line_indices":[]}},"selection_policy":{"type":"object","name":"UnionRenderers","id":"p1212"},"data":{"type":"map","entries":[["x",[0,1,2,3,4,5,6,7,8,9]],["y",{"type":"ndarray","array":{"type":"bytes","data":"H4sIAAEAAAAC/wFQAK//wcafm4Ny/b9y65nsYkvtv84whHvOdtq/Pq6eGxNOzr8iAcMsMGbzv5iGJrPU5QfA6ZEMzAv8EMAIlYYX8UwWwN6/AtJpLRfAr2wKLW30FcAsTIUaUAAAAA=="},"shape":[10],"dtype":"float64","order":"little"}]]}}},"plot_x":"x","plot_y":"y","plot_color":"#428bca","plot_type":"step","pos_color":"#5cb85c","neg_color":"#d9534f","value":-5.488697723160995,"value_change":-0.05274988833790906}},{"type":"object","name":"panel.models.trend.TrendIndicator","id":"p1219","attributes":{"stylesheets":["\n:host(.pn-loading):before, .pn-loading:before {\n  background-color: #c3c3c3;\n  mask-size: auto calc(min(50%, 300px));\n  -webkit-mask-size: auto calc(min(50%, 300px));\n}",{"id":"p1016"},{"id":"p1014"},{"id":"p1015"}],"width":150,"height":100,"margin":[5,10],"sizing_mode":"fixed","align":"start","change_formatter":{"type":"object","name":"NumeralTickFormatter","id":"p1220","attributes":{"format":"0.00%"}},"formatter":{"type":"object","name":"BasicTickFormatter","id":"p1221"},"layout":"column","source":{"type":"object","name":"ColumnDataSource","id":"p1216","attributes":{"selected":{"type":"object","name":"Selection","id":"p1217","attributes":{"indices":[],"line_indices":[]}},"selection_policy":{"type":"object","name":"UnionRenderers","id":"p1218"},"data":{"type":"map","entries":[["x",[0,1,2,3,4,5,6,7,8,9]],["y",{"type":"ndarray","array":{"type":"bytes","data":"H4sIAAEAAAAC/wFQAK//tW4y+hPz8L8oIzMF4mzyv7qIBOXyTvC/tgIwkz7j7L+ALdfy/ILSv0vg+urcEtq/y6A6J9nN8r9w12bUo/n3v9SQVEzeuvS/9PdS9vQD5b9S/4p1UAAAAA=="},"shape":[10],"dtype":"float64","order":"little"}]]}}},"plot_x":"x","plot_y":"y","plot_color":"#428bca","plot_type":"area","pos_color":"#5cb85c","neg_color":"#d9534f","value":-0.656733018018484,"value_change":-0.4931137794883751}},{"type":"object","name":"panel.models.trend.TrendIndicator","id":"p1225","attributes":{"stylesheets":["\n:host(.pn-loading):before, .pn-loading:before {\n  background-color: #c3c3c3;\n  mask-size: auto calc(min(50%, 300px));\n  -webkit-mask-size: auto calc(min(50%, 300px));\n}",{"id":"p1016"},{"id":"p1014"},{"id":"p1015"}],"width":150,"height":100,"margin":[5,10],"sizing_mode":"fixed","align":"start","change_formatter":{"type":"object","name":"NumeralTickFormatter","id":"p1226","attributes":{"format":"0.00%"}},"formatter":{"type":"object","name":"BasicTickFormatter","id":"p1227"},"layout":"column","source":{"type":"object","name":"ColumnDataSource","id":"p1222","attributes":{"selected":{"type":"object","name":"Selection","id":"p1223","attributes":{"indices":[],"line_indices":[]}},"selection_policy":{"type":"object","name":"UnionRenderers","id":"p1224"},"data":{"type":"map","entries":[["x",[0,1,2,3,4,5,6,7,8,9]],["y",{"type":"ndarray","array":{"type":"bytes","data":"H4sIAAEAAAAC/wFQAK//11jnAhG29r+4F++LwOD3v4hNACLEavu/Rwb8UY6x+b8A7Sph53vSv5l5b1IeaOm/2/8y1TJIBMCjJsvxOJ0EwM6J2Hf1BgnAW7nJByGyC8Bk9W7LUAAAAA=="},"shape":[10],"dtype":"float64","order":"little"}]]}}},"plot_x":"x","plot_y":"y","plot_color":"#428bca","plot_type":"bar","pos_color":"#5cb85c","neg_color":"#d9534f","value":-3.4619770630298894,"value_change":0.10662939782598868}}]]]},"data":{"type":"object","name":"FlexBox1","id":"p1034","attributes":{"name":"FlexBox00174","tags":["__ref:p1027"]}},"html":"&amp;lt;div id=&amp;quot;flexbox-${id}&amp;quot; style=&amp;quot;display: flex; flex-wrap: ${flex_wrap}; justify-content: ${justify_content}; flex-direction: ${flex_direction}; align-content: ${align_content}; align-items: ${align_items}; gap: ${gap}; height: 100%;&amp;quot;&amp;gt;\n\n  &amp;lt;div id=&amp;quot;flex-item-0-${id}&amp;quot; style=&amp;quot;display: contents;&amp;quot;&amp;gt;\n\n  &amp;lt;/div&amp;gt;\n\n  &amp;lt;div id=&amp;quot;flex-item-1-${id}&amp;quot; style=&amp;quot;display: contents;&amp;quot;&amp;gt;\n\n  &amp;lt;/div&amp;gt;\n\n  &amp;lt;div id=&amp;quot;flex-item-2-${id}&amp;quot; style=&amp;quot;display: contents;&amp;quot;&amp;gt;\n\n  &amp;lt;/div&amp;gt;\n\n  &amp;lt;div id=&amp;quot;flex-item-3-${id}&amp;quot; style=&amp;quot;display: contents;&amp;quot;&amp;gt;\n\n  &amp;lt;/div&amp;gt;\n\n  &amp;lt;div id=&amp;quot;flex-item-4-${id}&amp;quot; style=&amp;quot;display: contents;&amp;quot;&amp;gt;\n\n  &amp;lt;/div&amp;gt;\n\n  &amp;lt;div id=&amp;quot;flex-item-5-${id}&amp;quot; style=&amp;quot;display: contents;&amp;quot;&amp;gt;\n\n  &amp;lt;/div&amp;gt;\n\n  &amp;lt;div id=&amp;quot;flex-item-6-${id}&amp;quot; style=&amp;quot;display: contents;&amp;quot;&amp;gt;\n\n  &amp;lt;/div&amp;gt;\n\n  &amp;lt;div id=&amp;quot;flex-item-7-${id}&amp;quot; style=&amp;quot;display: contents;&amp;quot;&amp;gt;\n\n  &amp;lt;/div&amp;gt;\n\n  &amp;lt;div id=&amp;quot;flex-item-8-${id}&amp;quot; style=&amp;quot;display: contents;&amp;quot;&amp;gt;\n\n  &amp;lt;/div&amp;gt;\n\n  &amp;lt;div id=&amp;quot;flex-item-9-${id}&amp;quot; style=&amp;quot;display: contents;&amp;quot;&amp;gt;\n\n  &amp;lt;/div&amp;gt;\n\n  &amp;lt;div id=&amp;quot;flex-item-10-${id}&amp;quot; style=&amp;quot;display: contents;&amp;quot;&amp;gt;\n\n  &amp;lt;/div&amp;gt;\n\n  &amp;lt;div id=&amp;quot;flex-item-11-${id}&amp;quot; style=&amp;quot;display: contents;&amp;quot;&amp;gt;\n\n  &amp;lt;/div&amp;gt;\n\n  &amp;lt;div id=&amp;quot;flex-item-12-${id}&amp;quot; style=&amp;quot;display: contents;&amp;quot;&amp;gt;\n\n  &amp;lt;/div&amp;gt;\n\n  &amp;lt;div id=&amp;quot;flex-item-13-${id}&amp;quot; style=&amp;quot;display: contents;&amp;quot;&amp;gt;\n\n  &amp;lt;/div&amp;gt;\n\n  &amp;lt;div id=&amp;quot;flex-item-14-${id}&amp;quot; style=&amp;quot;display: contents;&amp;quot;&amp;gt;\n\n  &amp;lt;/div&amp;gt;\n\n  &amp;lt;div id=&amp;quot;flex-item-15-${id}&amp;quot; style=&amp;quot;display: contents;&amp;quot;&amp;gt;\n\n  &amp;lt;/div&amp;gt;\n\n  &amp;lt;div id=&amp;quot;flex-item-16-${id}&amp;quot; style=&amp;quot;display: contents;&amp;quot;&amp;gt;\n\n  &amp;lt;/div&amp;gt;\n\n  &amp;lt;div id=&amp;quot;flex-item-17-${id}&amp;quot; style=&amp;quot;display: contents;&amp;quot;&amp;gt;\n\n  &amp;lt;/div&amp;gt;\n\n  &amp;lt;div id=&amp;quot;flex-item-18-${id}&amp;quot; style=&amp;quot;display: contents;&amp;quot;&amp;gt;\n\n  &amp;lt;/div&amp;gt;\n\n  &amp;lt;div id=&amp;quot;flex-item-19-${id}&amp;quot; style=&amp;quot;display: contents;&amp;quot;&amp;gt;\n\n  &amp;lt;/div&amp;gt;\n\n  &amp;lt;div id=&amp;quot;flex-item-20-${id}&amp;quot; style=&amp;quot;display: contents;&amp;quot;&amp;gt;\n\n  &amp;lt;/div&amp;gt;\n\n  &amp;lt;div id=&amp;quot;flex-item-21-${id}&amp;quot; style=&amp;quot;display: contents;&amp;quot;&amp;gt;\n\n  &amp;lt;/div&amp;gt;\n\n  &amp;lt;div id=&amp;quot;flex-item-22-${id}&amp;quot; style=&amp;quot;display: contents;&amp;quot;&amp;gt;\n\n  &amp;lt;/div&amp;gt;\n\n  &amp;lt;div id=&amp;quot;flex-item-23-${id}&amp;quot; style=&amp;quot;display: contents;&amp;quot;&amp;gt;\n\n  &amp;lt;/div&amp;gt;\n\n  &amp;lt;div id=&amp;quot;flex-item-24-${id}&amp;quot; style=&amp;quot;display: contents;&amp;quot;&amp;gt;\n\n  &amp;lt;/div&amp;gt;\n\n  &amp;lt;div id=&amp;quot;flex-item-25-${id}&amp;quot; style=&amp;quot;display: contents;&amp;quot;&amp;gt;\n\n  &amp;lt;/div&amp;gt;\n\n  &amp;lt;div id=&amp;quot;flex-item-26-${id}&amp;quot; style=&amp;quot;display: contents;&amp;quot;&amp;gt;\n\n  &amp;lt;/div&amp;gt;\n\n  &amp;lt;div id=&amp;quot;flex-item-27-${id}&amp;quot; style=&amp;quot;display: contents;&amp;quot;&amp;gt;\n\n  &amp;lt;/div&amp;gt;\n\n  &amp;lt;div id=&amp;quot;flex-item-28-${id}&amp;quot; style=&amp;quot;display: contents;&amp;quot;&amp;gt;\n\n  &amp;lt;/div&amp;gt;\n\n  &amp;lt;div id=&amp;quot;flex-item-29-${id}&amp;quot; style=&amp;quot;display: contents;&amp;quot;&amp;gt;\n\n  &amp;lt;/div&amp;gt;\n\n  &amp;lt;div id=&amp;quot;flex-item-30-${id}&amp;quot; style=&amp;quot;display: contents;&amp;quot;&amp;gt;\n\n  &amp;lt;/div&amp;gt;\n\n  &amp;lt;div id=&amp;quot;flex-item-31-${id}&amp;quot; style=&amp;quot;display: contents;&amp;quot;&amp;gt;\n\n  &amp;lt;/div&amp;gt;\n\n&amp;lt;/div&amp;gt;","looped":["flex-item"],"nodes":["flexbox","flex-item-0","flex-item-1","flex-item-2","flex-item-3","flex-item-4","flex-item-5","flex-item-6","flex-item-7","flex-item-8","flex-item-9","flex-item-10","flex-item-11","flex-item-12","flex-item-13","flex-item-14","flex-item-15","flex-item-16","flex-item-17","flex-item-18","flex-item-19","flex-item-20","flex-item-21","flex-item-22","flex-item-23","flex-item-24","flex-item-25","flex-item-26","flex-item-27","flex-item-28","flex-item-29","flex-item-30","flex-item-31"]}}]}}],"defs":[{"type":"model","name":"ReactiveHTML1"},{"type":"model","name":"FlexBox1","properties":[{"name":"align_content","kind":"Any","default":"flex-start"},{"name":"align_items","kind":"Any","default":"flex-start"},{"name":"flex_direction","kind":"Any","default":"row"},{"name":"flex_wrap","kind":"Any","default":"wrap"},{"name":"gap","kind":"Any","default":""},{"name":"justify_content","kind":"Any","default":"flex-start"}]},{"type":"model","name":"FloatPanel1","properties":[{"name":"config","kind":"Any","default":{"type":"map"}},{"name":"contained","kind":"Any","default":true},{"name":"position","kind":"Any","default":"right-top"},{"name":"offsetx","kind":"Any","default":null},{"name":"offsety","kind":"Any","default":null},{"name":"theme","kind":"Any","default":"primary"},{"name":"status","kind":"Any","default":"normalized"}]},{"type":"model","name":"GridStack1","properties":[{"name":"ncols","kind":"Any","default":null},{"name":"nrows","kind":"Any","default":null},{"name":"allow_resize","kind":"Any","default":true},{"name":"allow_drag","kind":"Any","default":true},{"name":"state","kind":"Any","default":[]}]},{"type":"model","name":"drag1","properties":[{"name":"slider_width","kind":"Any","default":5},{"name":"slider_color","kind":"Any","default":"black"},{"name":"start","kind":"Any","default":0},{"name":"end","kind":"Any","default":100},{"name":"value","kind":"Any","default":50}]},{"type":"model","name":"click1","properties":[{"name":"terminal_output","kind":"Any","default":""},{"name":"debug_name","kind":"Any","default":""},{"name":"clears","kind":"Any","default":0}]},{"type":"model","name":"ReactiveESM1","properties":[{"name":"esm_constants","kind":"Any","default":{"type":"map"}}]},{"type":"model","name":"JSComponent1","properties":[{"name":"esm_constants","kind":"Any","default":{"type":"map"}}]},{"type":"model","name":"ReactComponent1","properties":[{"name":"use_shadow_dom","kind":"Any","default":true},{"name":"esm_constants","kind":"Any","default":{"type":"map"}}]},{"type":"model","name":"AnyWidgetComponent1","properties":[{"name":"use_shadow_dom","kind":"Any","default":true},{"name":"esm_constants","kind":"Any","default":{"type":"map"}}]},{"type":"model","name":"FastWrapper1","properties":[{"name":"object","kind":"Any","default":null},{"name":"style","kind":"Any","default":null}]},{"type":"model","name":"NotificationArea1","properties":[{"name":"js_events","kind":"Any","default":{"type":"map"}},{"name":"max_notifications","kind":"Any","default":5},{"name":"notifications","kind":"Any","default":[]},{"name":"position","kind":"Any","default":"bottom-right"},{"name":"_clear","kind":"Any","default":0},{"name":"types","kind":"Any","default":[{"type":"map","entries":[["type","warning"],["background","#ffc107"],["icon",{"type":"map","entries":[["className","fas fa-exclamation-triangle"],["tagName","i"],["color","white"]]}]]},{"type":"map","entries":[["type","info"],["background","#007bff"],["icon",{"type":"map","entries":[["className","fas fa-info-circle"],["tagName","i"],["color","white"]]}]]}]}]},{"type":"model","name":"Notification","properties":[{"name":"background","kind":"Any","default":null},{"name":"duration","kind":"Any","default":3000},{"name":"icon","kind":"Any","default":null},{"name":"message","kind":"Any","default":""},{"name":"notification_type","kind":"Any","default":null},{"name":"_rendered","kind":"Any","default":false},{"name":"_destroyed","kind":"Any","default":false}]},{"type":"model","name":"TemplateActions1","properties":[{"name":"open_modal","kind":"Any","default":0},{"name":"close_modal","kind":"Any","default":0}]},{"type":"model","name":"BootstrapTemplateActions1","properties":[{"name":"open_modal","kind":"Any","default":0},{"name":"close_modal","kind":"Any","default":0}]},{"type":"model","name":"TemplateEditor1","properties":[{"name":"layout","kind":"Any","default":[]}]},{"type":"model","name":"MaterialTemplateActions1","properties":[{"name":"open_modal","kind":"Any","default":0},{"name":"close_modal","kind":"Any","default":0}]},{"type":"model","name":"request_value1","properties":[{"name":"fill","kind":"Any","default":"none"},{"name":"_synced","kind":"Any","default":null},{"name":"_request_sync","kind":"Any","default":0}]}]}}
+    </script>
+    <script type="text/javascript">
+      (function() {
+        const fn = function() {
+          Bokeh.safely(function() {
+            (function(root) {
+              function embed_document(root) {
+              const docs_json = document.getElementById('p1230').textContent;
+              const render_items = [{"docid":"54afbead-2634-470b-a2d0-67b1fdd4389e","roots":{"p1012":"d828dd12-9bb8-4b75-96c4-e99b858d1cf3","p1019":"ba489552-bfc2-461e-b93e-e90e7e3b605c","p1021":"eceea5d8-26ef-42c9-aeb6-07d352d75757","p1022":"f4b04f0e-8f86-464d-9d41-620489cfc0ec","p1024":"e7a1f0ba-c2ca-4df4-8762-c1f6ad8e0653","p1026":"f634c154-ccc5-44f7-9fd2-81d1bc7cc60d","p1027":"a0f6f18b-be7b-4b18-b0bf-b7fdbbd22099"},"root_ids":["p1012","p1019","p1021","p1022","p1024","p1026","p1027"]}];
+              root.Bokeh.embed.embed_items(docs_json, render_items);
+              }
+              if (root.Bokeh !== undefined) {
+                embed_document(root);
+              } else {
+                let attempts = 0;
+                const timer = setInterval(function(root) {
+                  if (root.Bokeh !== undefined) {
+                    clearInterval(timer);
+                    embed_document(root);
+                  } else {
+                    attempts++;
+                    if (attempts > 100) {
+                      clearInterval(timer);
+                      console.log("Bokeh: ERROR: Unable to run BokehJS code because BokehJS library is missing");
+                    }
+                  }
+                }, 10, root)
+              }
+            })(window);
+          });
+        };
+        if (document.readyState != "loading") fn();
+      else document.addEventListener("DOMContentLoaded", fn, {once: true});
+      })();
+    </script>
+  </body>
+</html>
